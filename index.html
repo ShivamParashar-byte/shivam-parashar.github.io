@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shivam Parashar — Full-Stack Developer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0D1117;
+    --bg-raised: #11161D;
+    --bg-card: #151B23;
+    --line: #232B36;
+    --text: #C9D1D9;
+    --text-dim: #6E7681;
+    --text-bright: #F0F3F6;
+    --accent: #5FD9A4;
+    --accent-dim: #2D5A45;
+    --gold: #E3B341;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  ::selection { background: var(--accent-dim); color: var(--text-bright); }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- subtle background grid ---------- */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 75%);
+  }
+
+  /* ---------- top nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 960px; margin: 0 auto; padding: 16px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--mono); font-weight: 700; font-size: 15px;
+    color: var(--text-bright);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .nav-links { display: flex; gap: 28px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a.cta {
+    border: 1px solid var(--accent-dim); color: var(--accent);
+    padding: 6px 14px; border-radius: 4px;
+  }
+  .nav-links a.cta:hover { background: var(--accent-dim); }
+  @media (max-width: 640px) { .nav-links span.label { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 96px 0 72px; }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 13px; color: var(--accent);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .hero-eyebrow .cursor {
+    display: inline-block; width: 8px; height: 16px; background: var(--accent);
+    animation: blink 1.1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero h1 {
+    font-size: clamp(34px, 5.5vw, 56px);
+    font-weight: 700; color: var(--text-bright);
+    letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .hero h1 .hl { color: var(--accent); }
+  .hero p.sub {
+    font-size: 18px; color: var(--text-dim); max-width: 560px; margin-bottom: 34px;
+  }
+  .hero p.sub code {
+    font-family: var(--mono); color: var(--gold); background: var(--bg-raised);
+    padding: 1px 6px; border-radius: 4px; font-size: 15px;
+  }
+
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono); font-size: 14px; font-weight: 500;
+    padding: 12px 22px; border-radius: 6px; border: 1px solid transparent;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--accent); color: #06140D; font-weight: 700; }
+  .btn-primary:hover { box-shadow: 0 8px 24px -8px rgba(95,217,164,0.5); }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--accent-dim); color: var(--accent); }
+
+  /* ---------- section shared ---------- */
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 36px; }
+  .section-num { font-family: var(--mono); color: var(--text-dim); font-size: 14px; }
+  .section-title { font-size: 24px; font-weight: 700; color: var(--text-bright); }
+  .section-title .file { color: var(--text-dim); font-family: var(--mono); font-weight: 400; font-size: 16px; margin-left: 8px; }
+
+  /* ---------- stack / skills ---------- */
+  .stack-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .stack-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px;
+  }
+  .stack-card h3 {
+    font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .stack-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-family: var(--mono); font-size: 13px; color: var(--text);
+    background: var(--bg-raised); border: 1px solid var(--line);
+    padding: 5px 11px; border-radius: 5px;
+  }
+
+  /* ---------- experience timeline ---------- */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px; background: var(--line);
+  }
+  .job { position: relative; margin-bottom: 40px; }
+  .job:last-child { margin-bottom: 0; }
+  .job::before {
+    content: ''; position: absolute; left: -28px; top: 4px; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
+  }
+  .job-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .job-title { font-size: 18px; font-weight: 600; color: var(--text-bright); }
+  .job-company { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+  .job-dates {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    margin-left: auto; white-space: nowrap;
+  }
+  .job ul { margin-top: 12px; padding-left: 18px; }
+  .job li { font-size: 14.5px; color: var(--text-dim); margin-bottom: 7px; }
+  .job li::marker { color: var(--accent-dim); }
+  .job li strong { color: var(--text); font-weight: 500; }
+
+  /* ---------- projects ---------- */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+  .project-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 22px; display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .project-card:hover { border-color: var(--accent-dim); transform: translateY(-3px); }
+  .project-top { display: flex; align-items: center; justify-content: space-between; }
+  .project-icon {
+    width: 34px; height: 34px; border-radius: 7px; background: var(--bg-raised);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); color: var(--accent); font-size: 14px; font-weight: 700;
+  }
+  .project-year { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  .project-card h3 { font-size: 16.5px; color: var(--text-bright); font-weight: 600; }
+  .project-card p { font-size: 13.5px; color: var(--text-dim); flex: 1; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-family: var(--mono); font-size: 11px; color: var(--gold); background: rgba(227,179,65,0.08); padding: 3px 8px; border-radius: 4px; }
+
+  /* ---------- education ---------- */
+  .edu-row {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 22px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center;
+  }
+  .edu-row h3 { color: var(--text-bright); font-size: 16px; font-weight: 600; }
+  .edu-row p { font-size: 13.5px; color: var(--text-dim); margin-top: 4px; }
+  .edu-grade {
+    font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--accent);
+    text-align: right;
+  }
+  .edu-grade span { display: block; font-size: 11px; font-weight: 400; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ---------- contact ---------- */
+  .contact { text-align: center; padding: 80px 0 60px; }
+  .contact h2 { font-size: clamp(28px, 4vw, 40px); color: var(--text-bright); font-weight: 700; margin-bottom: 14px; }
+  .contact p { color: var(--text-dim); margin-bottom: 32px; }
+  .contact-links { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 26px 0; text-align: center;
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+  }
+  footer .dot { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .job-dates { margin-left: 0; }
+    .hero { padding: 72px 0 56px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo"><span class="dot"></span>shivam.dev</div>
+    <div class="nav-links">
+      <a href="#stack"><span class="label">01.</span> Stack</a>
+      <a href="#experience"><span class="label">02.</span> Experience</a>
+      <a href="#projects"><span class="label">03.</span> Projects</a>
+      <a href="mailto:Paeshar32@gmail.com" class="cta">Hire me</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;">
+    <div class="hero-eyebrow">whoami <span class="cursor"></span></div>
+    <h1>Shivam Parashar —<br>Full-Stack Developer<span class="hl">.</span></h1>
+    <p class="sub">
+      4+ years building backend systems and leading dev teams. Currently shipping with
+      <code>Java</code> <code>Spring Boot</code> <code>React</code> <code>Golang</code> <code>Python</code>.
+      Based in Delhi, India.
+    </p>
+    <div class="hero-cta">
+      <a href="mailto:Paeshar32@gmail.com" class="btn btn-primary">→ Get in touch</a>
+      <a href="https://www.linkedin.com/in/shivam-parashar-820289177" target="_blank" class="btn btn-ghost">View LinkedIn</a>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <span class="section-title">Tech Stack <span class="file">~/skills</span></span>
+    </div>
+    <div class="stack-groups">
+      <div class="stack-card">
+        <h3>Languages</h3>
+        <div class="stack-pills">
+          <span class="pill">Java</span><span class="pill">Python</span><span class="pill">Golang</span>
+          <span class="pill">JavaScript</span><span class="pill">SQL</span><span class="pill">HTML5/CSS3</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <h3>Frameworks</h3>
+        <div class="stack-pills">
+          <span class="pill">Spring Boot</span><span class="pill">React.js</span>
+          <span class="pill">Node.js</span><span class="pill">jQuery</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <h3>Tools & Platforms</h3>
+        <div class="stack-pills">
+          <span class="pill">Git</span><span class="pill">REST APIs</span>
+          <span class="pill">Origami Risk</span><span class="pill">Agile/Scrum</span>
+        </div>
+      </div>
+      <div class="stack-card">
+        <h3>Concepts</h3>
+        <div class="stack-pills">
+          <span class="pill">Team Leadership</span><span class="pill">API Design</span>
+          <span class="pill">Automation</span><span class="pill">Data Analysis</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <span class="section-title">Experience <span class="file">~/work-history</span></span>
+    </div>
+    <div class="timeline">
+
+      <div class="job">
+        <div class="job-head">
+          <span class="job-title">Senior Web Developer & Team Lead</span>
+          <span class="job-company">@ Cosmos Public Relations</span>
+          <span class="job-dates">SEP 2024 — MAY 2026</span>
+        </div>
+        <ul>
+          <li>Led a team of <strong>4 developers</strong> delivering full-stack solutions for PR and communications clients.</li>
+          <li>Architected web apps in <strong>React.js & Node.js</strong>, cutting page load times by <strong>35%</strong>.</li>
+          <li>Mentored junior developers and ran code reviews — lifted team productivity by <strong>25%</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <span class="job-title">Associate Analyst — Software Developer</span>
+          <span class="job-company">@ Deloitte</span>
+          <span class="job-dates">DEC 2022 — MAY 2024</span>
+        </div>
+        <ul>
+          <li>Built backend components in <strong>Java & Spring Boot</strong> with <strong>99% on-time</strong> delivery SLA.</li>
+          <li>Automated manual reporting workflows, lifting operational efficiency by <strong>20%</strong>.</li>
+          <li>Queried large datasets in <strong>SQL</strong> to generate insights for client decision-making.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <span class="job-title">Junior Software Developer</span>
+          <span class="job-company">@ Pepcoding</span>
+          <span class="job-dates">JUL 2021 — JUL 2022</span>
+        </div>
+        <ul>
+          <li>Shipped <strong>10+ React.js</strong> components and implemented state management with Hooks.</li>
+          <li>Built fully responsive pages using <strong>HTML5 & CSS3</strong> across devices.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <span class="section-title">Projects <span class="file">~/projects</span></span>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">OS</div>
+          <span class="project-year">2022</span>
+        </div>
+        <h3>Virtual OS</h3>
+        <p>A simulated operating system built in Golang — calculator, music player, calendar, and live weather app, demonstrating Go concurrency and system design.</p>
+        <div class="project-tags"><span class="tag">golang</span><span class="tag">systems</span></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">EC</div>
+          <span class="project-year">2022</span>
+        </div>
+        <h3>E-Commerce Web App</h3>
+        <p>Full-stack shopping platform with cart management and purchase history, built end-to-end with React.js and JavaScript.</p>
+        <div class="project-tags"><span class="tag">react</span><span class="tag">javascript</span></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">AU</div>
+          <span class="project-year">2022</span>
+        </div>
+        <h3>Web Automation Suite</h3>
+        <p>Python scripts automating LinkedIn connection requests, live Cricbuzz scores, and budget-filtered Flipkart listings exported to Word.</p>
+        <div class="project-tags"><span class="tag">python</span><span class="tag">automation</span></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">RM</div>
+          <span class="project-year">2024</span>
+        </div>
+        <h3>Risk Workflow Engine</h3>
+        <p>Internal tool extending Spring Boot services on the Origami Risk platform — custom rule-based workflow configs that cut manual claim-routing time significantly.</p>
+        <div class="project-tags"><span class="tag">java</span><span class="tag">spring-boot</span><span class="tag">sql</span></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">TD</div>
+          <span class="project-year">2025</span>
+        </div>
+        <h3>Team Task Dashboard</h3>
+        <p>Internal project-tracking dashboard built while leading the dev team at Cosmos — real-time task status, assignment, and progress views for a 4-person team.</p>
+        <div class="project-tags"><span class="tag">react</span><span class="tag">node.js</span><span class="tag">rest-api</span></div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-icon">GO</div>
+          <span class="project-year">2023</span>
+        </div>
+        <h3>Go URL Shortener</h3>
+        <p>A lightweight, high-concurrency URL shortening service in Golang with click analytics, built to explore Go's goroutines and in-memory caching patterns.</p>
+        <div class="project-tags"><span class="tag">golang</span><span class="tag">backend</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <span class="section-title">Education <span class="file">~/education</span></span>
+    </div>
+    <div class="edu-row">
+      <div>
+        <h3>Bachelor of Computer Applications (BCA)</h3>
+        <p>Vivekananda Institute of Professional Studies (VIPS), GGSIPU · 2022</p>
+      </div>
+      <div class="edu-grade">9.0<span>/ 10 CGPA</span></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" style="border-top:none;">
+    <h2>Let's build something.</h2>
+    <p>Open to full-time roles in Delhi/NCR or remote — available to join immediately.</p>
+    <div class="contact-links">
+      <a href="mailto:Paeshar32@gmail.com" class="btn btn-primary">✉ Paeshar32@gmail.com</a>
+      <a href="tel:+917011005660" class="btn btn-ghost">📞 +91 7011005660</a>
+      <a href="https://www.linkedin.com/in/shivam-parashar-820289177" target="_blank" class="btn btn-ghost">in/shivam-parashar</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  built with care <span class="dot">●</span> Shivam Parashar 2026
+</footer>
+
+</body>
+</html>
